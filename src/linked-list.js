@@ -18,9 +18,7 @@ class LinkedList {
       this._tail = node;
     }
     this.length++;
-    // console.log("_tail", this._tail);
-    // console.log("_head", this._head);
-    // console.log("----------------------");
+    return this;
   }
 
   head() {
@@ -45,6 +43,9 @@ class LinkedList {
   }
 
   insertAt(index, data) {
+    if (this.length === 0) {
+      this.append(data);
+    }
     let count = 1;
     let current = this._head;
     let node = new Node(data);
@@ -75,13 +76,76 @@ class LinkedList {
     this._head = null;
     this._tail = null;
     this.length = 0;
+    return this;
   }
 
-  deleteAt(index) {}
+  deleteAt(index) {
+    let count = 1;
+    let current = this._head;
+    if (index === 0) {
+      if (this.length === 1) {
+        this._head = null;
+        this._tail = null;
+        this.length = 0;
+      } else {
+        this._head = current.next;
+        this._head.prev = null;
+        this.length--;
+      }
+    } else {
+      while (count > 0) {
+        current = current.next;
+        if (count === this.length) {
+          this._tail = this._tail.prev;
+          this._tail.next = null;
+        }
+        if (count === index) {
+          current.prev.next = current.next;
+          current.next.prev = current.prev;
+          this.length--;
+          break;
+        }
+        count++;
+      }
+    }
+    return this;
+  }
 
-  reverse() {}
+  reverse() {
+    if (this.length > 1) {
+      let current = this._head;
+      let prev = null;
+      while (true) {
+        let next = current.next;
+        current.next = prev;
+        current.prev = next;
+        prev = current;
+        current = next;
+        if (current === null) {
+          break;
+        }
+      }
+      this._tail = this._head;
+      this._head = prev;
+    }
 
-  indexOf(data) {}
+    return this;
+  }
+
+  indexOf(data) {
+    let count = 0;
+    let current = this._head;
+    while (count >= 0) {
+      if (current.data === data) {
+        return count;
+      }
+      current = current.next;
+      count++;
+      if (current === null) {
+        return -1;
+      }
+    }
+  }
 }
 
 module.exports = LinkedList;
